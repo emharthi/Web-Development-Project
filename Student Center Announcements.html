@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script src="nav.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Center Announcements</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* تنسيق شريط التنقل */
+        nav {
+            width: 250px; /* عرض شريط التنقل */
+            background-color: #007bff;
+            padding: 15px;
+            position: fixed; /* لجعل شريط التنقل ثابتًا */
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        /* تنسيق المحتوى الرئيسي */
+        .container {
+            margin-left: 270px; /* إزاحة المحتوى لتجنب تداخله مع شريط التنقل */
+            width: calc(100% - 270px); /* لضمان عرض مناسب للمحتوى */
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #34495e; /* لون العناوين */
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #2980b9; /* لون الأزرار */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1f6690; /* لون الأزرار عند التمرير */
+        }
+
+        .ad {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ad h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .ad img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .rating {
+            margin: 10px 0;
+            display: flex;
+        }
+
+        .star {
+            font-size: 24px;
+            color: gray;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .star:hover,
+        .star.selected {
+            color: gold;
+        }
+
+        .comments {
+            margin-top: 15px;
+        }
+
+        .comments input {
+            width: 80%;
+            margin-right: 10px;
+        }
+
+        .comment-list {
+            margin-top: 10px;
+        }
+
+        .comment {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container">
+        <h2>Add Announcement</h2>
+        <form id="adForm">
+            <label for="title">Event Name:</label>
+            <input type="text" id="title" required>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+
+            <label for="time">Time:</label>
+            <input type="time" id="time" required>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" rows="4" required></textarea>
+
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" accept="image/*" required>
+            <button type="submit">Add Announcement</button>
+        </form>
+    </div>
+
+    <h2>Current Announcements</h2>
+    <div id="adsContainer"></div>
+</div>
+
+<script>
+    const adsContainer = document.getElementById('adsContainer');
+
+    // Load ads from Local Storage
+    function loadAds() {
+        const ads = JSON.parse(localStorage.getItem('ads')) || [];
+        ads.forEach(ad => {
+            displayAd(ad);
+        });
+    }
+
+    // Display a single ad
+    function displayAd(ad) {
+        const adDiv = document.createElement('div');
+        adDiv.classList.add('ad');
+        adDiv.dataset.dateTime = ad.dateTime;
+
+        adDiv.innerHTML = `
+            <h3>${ad.title}</h3>
+            <p><strong>Date:</strong> ${new Date(ad.date).toLocaleDateString('en-US')} <strong>Time:</strong> ${ad.time}</p>
+            <p><strong>Location:</strong> ${ad.location}</p>
+            <p>${ad.description}</p>
+            <img src="${ad.image}" alt="${ad.title}">
+            <div class="rating" data-rating="0">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <div class="comments">
+                <input type="text" placeholder="Write your comment here...">
+                <button onclick="addComment(this)">Add Comment</button>
+                <div class="comment-list"></div>
+            </div>
+            <button onclick="deleteAd(this)">Delete Announcement</button>
+        `;
+
+        // Add star rating functionality
+        const stars = adDiv.querySelectorAll('.star');
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const ratingValue = this.dataset.value;
+                adDiv.querySelector('.rating').dataset.rating = ratingValue;
+                stars.forEach(s => {
+                    s.classList.remove('selected');
+                    if (s.dataset.value <= ratingValue) {
+                        s.classList.add('selected');
+                    }
+                });
+            });
+        });
+
+        adsContainer.appendChild(adDiv);
+    }
+
+    document.getElementById('adForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const location = document.getElementById('location').value;
+        const description = document.getElementById('description').value;
+        const imageFile = document.getElementById('image').files[0];
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const ad = {
+                title,
+                date,
+                time,
+                location,
+                description,
+                image: event.target.result,
+                dateTime: new Date(`${date}T${time}`).getTime()
+            };
+
+            saveAd(ad);
+            displayAd(ad);
+            document.getElementById('adForm').reset();
+            checkExpiredAds();
+        };
+
+        if (imageFile) {
+            reader.readAsDataURL(imageFile);
+        }
+    });
+
+    function saveAd(ad) {
+        const ads = JSON.parse(localStorage.getItem('ads')) || [];
+        ads.push(ad);
+        localStorage.setItem('ads', JSON.stringify(ads));
+    }
+
+    function deleteAd(button) {
+        const adDiv = button.parentElement;
+        const ads = JSON.parse(localStorage.getItem('ads')) || [];
+        const updatedAds = ads.filter(ad => ad.title !== adDiv.querySelector('h3').innerText);
+        localStorage.setItem('ads', JSON.stringify(updatedAds));
+        adDiv.remove();
+    }
+
+    function addComment(button) {
+        const commentInput = button.previousElementSibling;
+        const commentText = commentInput.value;
+        if (commentText) {
+            const commentList = button.nextElementSibling;
+            const newComment = document.createElement('div');
+            newComment.classList.add('comment');
+            newComment.textContent = commentText;
+            commentList.appendChild(newComment);
+            commentInput.value = '';
+        }
+    }
+
+    function checkExpiredAds() {
+        const now = Date.now();
+        const ads = document.querySelectorAll('.ad');
+
+        ads.forEach(ad => {
+            const adDateTime = parseInt(ad.dataset.dateTime);
+            if (adDateTime < now) {
+                deleteAd(ad.querySelector('button')); // Remove announcement if expired
+            }
+        });
+    }
+
+    // Load ads on page load
+    window.onload = loadAds;
+</script>
+
+</body>
+</html>
+
+
+

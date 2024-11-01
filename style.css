@@ -1,0 +1,52 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: block; /* استخدام block بدلاً من flex لتجنب أي تعارض */
+}
+
+nav {
+    background-color: #0066CC;
+    width: 200px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100; /* التأكد من أن شريط التنقل دائمًا فوق المحتوى */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin-bottom: 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 10px 15px;
+    background-color: #004B99;
+    border-radius: 5px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #003366;
+}
+
+main {
+    margin-left: 220px; 
+    padding: 20px;
+    overflow: hidden;
+
+}

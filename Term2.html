@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css"> <!-- تأكد من ربط ملف الـCSS الخاص بالتنقل هنا -->
+    <script src="nav.js"></script>
+
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Academic Calendar 1446 - Term 2</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* شريط التنقل */
+        nav {
+            width: 250px;
+            height: 100vh;
+            background-color: #007bff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin-bottom: 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* المحتوى الرئيسي */
+        .content {
+            margin-left: 270px; /* عرض شريط التنقل بالإضافة إلى بعض المساحة */
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .week {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .week:hover {
+            transform: translateY(-5px);
+        }
+
+        .week h3 {
+            margin-top: 0;
+            font-size: 18px;
+            text-align: center;
+            color: #007bff;
+        }
+
+        .day {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .day.green-dark {
+            background-color: #2e7d32; /* Dark green for start dates */
+            color: white;
+        }
+
+        .day.red-dark {
+            background-color: #c62828; /* Dark red for end dates */
+            color: white;
+        }
+
+        .day.note {
+            background-color: yellow; /* Highlight yellow for days with notes */
+            color: black;
+        }
+
+        .day:hover {
+            background-color: #e0e0e0;
+        }
+
+        .day .note-count {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #d32f2f;
+            color: white;
+            padding: 3px 7px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: none;
+        }
+
+        .important-dates {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .important-dates h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .important-dates ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .important-dates ul li {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #007bff;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        #allNotes {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+            display: none;
+        }
+
+        #allNotes ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #allNotes ul li {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<div class="content">
+    <h1>Academic Calendar 1446 - Term 2</h1>
+
+    <div class="calendar">
+    <!-- Week 1 -->
+    <div class="week">
+        <h3>Week 1</h3>
+        <div class="day">Sun 21/11</div>
+        <div class="day">Mon 22/11</div>
+        <div class="day">Tue 23/11</div>
+        <div class="day">Wed 24/11</div>
+        <div class="day">Thu 25/11</div>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="week">
+        <h3>Week 2</h3>
+        <div class="day">Sun 28/11</div>
+        <div class="day">Mon 29/11</div>
+        <div class="day">Tue 30/11</div>
+        <div class="day">Wed 01/12</div>
+        <div class="day">Thu 02/12</div>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="week">
+        <h3>Week 3</h3>
+        <div class="day">Sun 05/12</div>
+        <div class="day">Mon 06/12</div>
+        <div class="day">Tue 07/12</div>
+        <div class="day">Wed 08/12</div>
+        <div class="day">Thu 09/12</div>
+    </div>
+
+    <!-- Week 4 -->
+    <div class="week">
+        <h3>Week 4</h3>
+        <div class="day">Sun 12/12</div>
+        <div class="day">Mon 13/12</div>
+        <div class="day">Tue 14/12</div>
+        <div class="day">Wed 15/12</div>
+        <div class="day">Thu 16/12</div>
+    </div>
+
+    <!-- Week 5 -->
+    <div class="week">
+        <h3>Week 5</h3>
+        <div class="day">Sun 18/12</div>
+        <div class="day">Mon 19/12</div>
+        <div class="day">Mon 20/12</div>
+        <div class="day">Tue 21/12</div>
+        <div class="day">Wed 22/12</div>
+    </div>
+
+    <!-- Week 6 -->
+    <div class="week">
+        <h3>Week 6</h3>
+        <div class="day">sun 26/12</div>
+        <div class="day">Mon 27/12</div>
+        <div class="day">Tue 28/12</div>
+        <div class="day">Wed 29/12</div>
+        <div class="day">Thu 30/12</div>
+    </div>
+
+    <!-- Week 7 -->
+    <div class="week">
+        <h3>Week 7</h3>
+        <div class="day">Sun 09/01</div>
+        <div class="day">Mon 10/01</div>
+        <div class="day">Tue 11/01</div>
+        <div class="day">Wed 12/01</div>
+        <div class="day">Thu 13/01</div>
+    </div>
+
+    <!-- Week 8 -->
+    <div class="week">
+        <h3>Week 8</h3>
+        <div class="day">Sun 16/01</div>
+        <div class="day">Mon 17/01</div>
+        <div class="day">Tue 18/01</div>
+        <div class="day">Wed 19/01</div>
+        <div class="day">Thu 20/01</div>
+    </div>
+
+    <!-- Week 9 -->
+    <div class="week">
+        <h3>Week 9</h3>
+        <div class="day">Sun 23/01</div>
+        <div class="day">Mon 24/01</div>
+        <div class="day">Tue 25/01</div>
+        <div class="day">Wed 26/01</div>
+        <div class="day">Thu 27/01</div>
+    </div>
+
+    <!-- Week 10 -->
+    <div class="week">
+        <h3>Week 10</h3>
+        <div class="day">Sun 30/01</div>
+        <div class="day">Mon 31/01</div>
+        <div class="day">Tue 01/02</div>
+        <div class="day">Wed 02/02</div>
+        <div class="day">Thu 03/02</div>
+    </div>
+
+    <!-- Week 11 -->
+    <div class="week">
+        <h3>Week 11</h3>
+        <div class="day">Sun 06/02</div>
+        <div class="day">Mon 07/02</div>
+        <div class="day">Tue 08/02</div>
+        <div class="day">Wed 09/02</div>
+        <div class="day">Thu 10/02</div>
+    </div>
+
+    <!-- Week 12 -->
+    <div class="week">
+        <h3>Week 12</h3>
+        <div class="day">Sun 13/02</div>
+        <div class="day">Mon 14/02</div>
+        <div class="day">Tue 15/02</div>
+        <div class="day">Wed 16/02</div>
+        <div class="day">Thu 17/02</div>
+    </div>
+
+    <!-- Week 13 -->
+    <div class="week">
+        <h3>Week 13</h3>
+        <div class="day">Sun 20/02</div>
+        <div class="day">Mon 21/02</div>
+        <div class="day">Tue 22/02</div>
+        <div class="day">Wed 23/02</div>
+        <div class="day">Thu 24/02</div>
+    </div>
+
+</div>
+
+<!-- Important Dates Section -->
+<div class="important-dates">
+    <h2>Important Dates</h2>
+    <ul>
+        <li><strong>Sun 21/11</strong> - Start of Term</li>
+        <li><strong>Sun 19/12</strong> - Start Adding Courses</li>
+        <li><strong>Thu 23/12</strong> - End Adding Courses</li>
+        <li><strong>Tue 28/12</strong> - Start Withdrawal</li>
+        <li><strong>Sun 02/01</strong> - End Withdrawal</li>
+    </ul>
+</div>
+
+
+    <div class="actions">
+        <button class="btn" onclick="showAllNotes()">Show All Notes</button>
+    </div>
+
+    <div id="allNotes">
+        <h3>All Notes</h3>
+        <ul id="notesList"></ul>
+    </div>
+</div>
+
+<script>
+    const days = document.querySelectorAll('.day');
+    const allNotes = [];
+
+    days.forEach(day => {
+        day.addEventListener('click', function () {
+            let currentDay = day.textContent.trim();
+            let notesForDay = allNotes.find(noteItem => noteItem.date === currentDay);
+            
+            // If no notes found for the day, initialize an empty array for the day
+            if (!notesForDay) {
+                notesForDay = { date: currentDay, notes: [] };
+                allNotes.push(notesForDay);
+            }
+            
+            // Ask for a new note
+            const note = prompt('Enter or edit your note for ' + currentDay, '');
+            if (note) {
+                let noteCountElem = day.querySelector('.note-count');
+                
+                // Add the new note to the day's notes
+                notesForDay.notes.push(note);
+                
+                // Update note count
+                if (!noteCountElem) {
+                    noteCountElem = document.createElement('span');
+                    noteCountElem.className = 'note-count';
+                    day.appendChild(noteCountElem);
+                }
+                noteCountElem.textContent = notesForDay.notes.length;
+                noteCountElem.style.display = 'inline-block';
+                
+                // Change the background color of the day
+                day.classList.add('note');
+            }
+        });
+    });
+
+    function showAllNotes() {
+        const notesList = document.getElementById('notesList');
+        notesList.innerHTML = ''; // Clear the list
+
+        if (allNotes.length === 0) {
+            notesList.innerHTML = '<li>No notes added yet.</li>';
+        } else {
+            allNotes.forEach(noteItem => {
+                noteItem.notes.forEach((note, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${noteItem.date} (Note ${index + 1}): ${note}`;
+                    notesList.appendChild(li);
+                });
+            });
+        }
+
+        document.getElementById('allNotes').style.display = 'block';
+    }
+</script>
+
+</body>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<link rel="stylesheet" href="style.css">
+<script src="nav.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الحذف والإضافة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* تعديل لضمان أن المحتوى لا يتداخل مع شريط التنقل */
+        .content {
+            margin-left: 250px; /* يجب أن يكون متناسقًا مع عرض شريط التنقل */
+            padding: 20px;
+            width: calc(100% - 250px); /* تأكد من تخصيص العرض المتبقي */
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        section {
+            padding: 20px;
+            background-color: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <header>
+            <h1>Drop and Add System</h1>
+        </header>
+    
+        <section id="college-section">
+            <h2>Select Main College</h2>
+            <form id="college-form">
+                <select name="college" id="college-select">
+                    <option value="">Select Main College</option>
+                    <option value="Medical Colleges">Medical Colleges</option>
+                    <option value="Scientific and Engineering Colleges">Scientific and Engineering Colleges</option>
+                    <option value="Sharia and Administrative Colleges">Sharia and Administrative Colleges</option>
+                    <option value="Humanities and Educational Colleges">Humanities and Educational Colleges</option>
+                    <option value="Provincial Colleges">Provincial Colleges</option>
+                </select>
+                <button type="button" onclick="showSubColleges()">Next</button>
+            </form>
+        </section>
+    
+        <section id="sub-colleges-section" class="hidden">
+            <h2>Select Sub College</h2>
+            <form id="sub-college-form" action="#" method="GET">
+                <div id="sub-college-list"></div>
+                <p id="day-message" class="day-message"></p>
+                <button type="button" onclick="showCourses()">Next</button>
+            </form>
+        </section>
+    
+        <section id="courses-section" class="hidden">
+            <h2>Select Specialized Courses</h2>
+            <form id="courses-form">
+                <div id="courses-list"></div>
+                <button type="button" onclick="addSelectedCourses()">Add Selected Courses</button>
+                <h3>Added Courses:</h3>
+                <ul id="added-courses-list"></ul>
+                <button type="submit">Confirm Drop and Add</button>
+            </form>
+        </section>
+    
+        <footer>
+            <p>© Umm Al-Qura University - Drop and Add System</p>
+        </footer>
+    </div>
+    
+    <script>
+        function showSubColleges() {
+            const collegeSelect = document.getElementById('college-select');
+            const selectedCollege = collegeSelect.value;
+            const subCollegeList = document.getElementById("sub-college-list");
+            const dayMessage = document.getElementById("day-message");
+    
+            const subColleges = {
+                "Medical Colleges": ["Medicine", "Dentistry", "Pharmacy"],
+                "Scientific and Engineering Colleges": ["Science", "Engineering", "Computing"],
+                "Sharia and Administrative Colleges": ["Sharia", "Economics and Administration"],
+                "Humanities and Educational Colleges": ["Arabic Language", "Education", "Designs and Arts"],
+                "Provincial Colleges": ["Community College", "Education in Al-Lith"]
+            };
+    
+            const collegeDays = {
+                "Medical Colleges": "Sunday",
+                "Scientific and Engineering Colleges": "Monday",
+                "Sharia and Administrative Colleges": "Tuesday",
+                "Humanities and Educational Colleges": "Wednesday",
+                "Provincial Colleges": "Thursday"
+            };
+    
+            subCollegeList.innerHTML = '';
+            dayMessage.textContent = '';
+    
+            if (subColleges[selectedCollege]) {
+                subColleges[selectedCollege].forEach(function(subCollege) {
+                    const radioInput = document.createElement("input");
+                    radioInput.type = "radio";
+                    radioInput.name = "sub-college";
+                    radioInput.value = subCollege;
+                    radioInput.required = true;
+    
+                    const label = document.createElement("label");
+                    label.textContent = subCollege;
+    
+                    subCollegeList.appendChild(radioInput);
+                    subCollegeList.appendChild(label);
+                    subCollegeList.appendChild(document.createElement("br"));
+                });
+    
+                dayMessage.textContent = "Drop and add day for this college: " + collegeDays[selectedCollege];
+                document.getElementById("sub-colleges-section").classList.remove("hidden");
+                document.getElementById("college-section").classList.add("hidden");
+            }
+        }
+    
+        function showCourses() {
+            const selectedSubCollege = document.querySelector('input[name="sub-college"]:checked').value;
+            const coursesList = document.getElementById("courses-list");
+    
+            const courses = {
+                "Medicine": ["Anatomy", "Pharmacology", "Pathology", "Clinical Practice"],
+                "Dentistry": ["Dentistry", "Oral Surgery", "Orthodontics", "Oral Pathology"],
+                "Pharmacy": ["Pharmaceutical Sciences", "Pharmacology", "Biochemistry", "Pharmacy Practices"],
+                "Science": ["Physics", "Chemistry", "Mathematics", "Biological Sciences"],
+                "Engineering": ["Computer Engineering", "Civil Engineering", "Mechanical Engineering", "Electrical Engineering"],
+                "Computing": ["Computer Programming", "Computer Networks", "Operating Systems", "Web Development"],
+                "Sharia": ["Fiqh", "Usul", "Tafsir", "Hadith"],
+                "Economics and Administration": ["Business Administration", "Macroeconomics", "Finance", "Human Resource Management"],
+                "Arabic Language": ["Arabic Literature", "Language and Grammar", "Rhetoric", "Arabic Theater"],
+                "Education": ["Child Education", "Psychological Guidance", "Educational Technologies", "Special Education"],
+                "Designs and Arts": ["Graphic Design", "Drawing", "Interior Design", "Performing Arts"],
+                "Community College": ["Introduction to Accounting", "Computer Basics", "Communication", "Marketing"],
+                "Education in Al-Lith": ["Teaching Methods", "Physical Education", "School Administration", "Mathematics Education"]
+            };
+    
+            coursesList.innerHTML = '';
+    
+            if (courses[selectedSubCollege]) {
+                courses[selectedSubCollege].forEach(function(course) {
+                    const checkboxInput = document.createElement("input");
+                    checkboxInput.type = "checkbox";
+                    checkboxInput.name = "course";
+                    checkboxInput.value = course;
+    
+                    const label = document.createElement("label");
+                    label.textContent = course;
+    
+                    coursesList.appendChild(checkboxInput);
+                    coursesList.appendChild(label);
+                    coursesList.appendChild(document.createElement("br"));
+                });
+    
+                document.getElementById("courses-section").classList.remove("hidden");
+                document.getElementById("sub-colleges-section").classList.add("hidden");
+            }
+        }
+    
+        function addSelectedCourses() {
+            const selectedCourses = Array.from(document.querySelectorAll('input[name="course"]:checked')).map(checkbox => checkbox.value);
+            const addedCoursesList = document.getElementById("added-courses-list");
+    
+            selectedCourses.forEach(course => {
+                const listItem = document.createElement("li");
+                listItem.textContent = course;
+    
+                const removeButton = document.createElement("button");
+                removeButton.textContent = "Remove";
+                removeButton.onclick = function() {
+                    addedCoursesList.removeChild(listItem);
+                };
+    
+                listItem.appendChild(removeButton);
+                addedCoursesList.appendChild(listItem);
+            });
+        }
+    
+        document.getElementById("courses-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const addedCourses = Array.from(document.querySelectorAll('#added-courses-list li')).map(li => li.textContent.replace('Remove', '').trim());
+            alert("Selected courses: " + addedCourses.join(", "));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Office Hours Appointment</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="nav.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .content {
+            margin: 20px auto;
+            padding: 20px;
+            width: 100%;
+            
+            max-width: 100%; /* تحديد الحد الأقصى لعرض المحتوى */
+            box-sizing: border-box;
+            margin-left: 220px;
+            width: calc(100% - 220px);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h1>Book Office Hours Appointment</h1>
+
+        <!-- Form action modified to send data to PHP file -->
+        <form id="appointment-form" action="submit_appointment.php" method="POST">
+            <label for="student-name">Student Name</label>
+            <input type="text" id="student-name" name="student_name" placeholder="Enter your full name" required>
+
+            <label for="doctor">Select Doctor</label>
+            <select id="doctor" name="doctor" required>
+                <option value="">Select a Doctor</option>
+                <option value="Dr. Hasan Ruwaizq Rudeed Al-Hadhli">Dr. Hasan Ruwaizq Rudeed Al-Hadhli</option>
+                <option value="Dr. Ahmed Hasan Yahya Al-Hindi">Dr. Ahmed Hasan Yahya Al-Hindi</option>
+                <option value="Dr. Mohammed Kamal Hasan Halwani">Dr. Mohammed Kamal Hasan Halwani</option>
+                <option value="Dr. Idrees Nasser Ali Al-Sulbi">Dr. Idrees Nasser Ali Al-Sulbi</option>
+            </select>
+
+            <label for="appointment-date">Select Appointment Date</label>
+            <input type="datetime-local" id="appointment-date" name="appointment_date" required>
+
+            <label for="session-duration">Session Duration</label>
+            <input type="text" id="session-duration" name="session_duration" value="One Hour" readonly>
+
+            <label for="hall">Select Hall</label>
+            <select id="hall" name="hall" required>
+                <option value="">Select a Hall</option>
+                <option value="Hall 1">Hall 1</option>
+                <option value="Hall 2">Hall 2</option>
+                <option value="Hall 3">Hall 3</option>
+                <option value="Hall 4">Hall 4</option>
+            </select>
+
+            <label for="notes">Additional Notes</label>
+            <textarea id="notes" name="notes" rows="4" placeholder="Enter any additional notes here"></textarea>
+
+            <button type="submit">Book Appointment</button>
+        </form>
+    </div>
+</body>
+</html>
